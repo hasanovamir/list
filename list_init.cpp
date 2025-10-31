@@ -7,8 +7,8 @@ list_err_t ListInit (list_t* list, int capacity)
     DEBUG_ASSERT (list != NULL);
 
     list->free = 1;
-    list->head = 1;
-    list->tail = 1;
+    list->head = 0;
+    list->tail = 0;
     list->capacity = capacity;
 
     if (capacity < 0)
@@ -48,7 +48,7 @@ list_err_t ListInit (list_t* list, int capacity)
 
 //--------------------------------------------------------------------------------
 
-list_err_t UpSizeList (list_t* list)
+list_err_t IncreaseList (list_t* list)
 {
     DEBUG_ASSERT (list       != NULL);
     DEBUG_ASSERT (list->data != NULL);
@@ -100,26 +100,6 @@ void ListDestroy (list_t* list)
     list->data = NULL;
     list->next = NULL;
     list->prev = NULL;
-}
-
-//--------------------------------------------------------------------------------
-
-void ListTerminalDump (list_t* list)
-{
-    DEBUG_ASSERT (list       != NULL);
-    DEBUG_ASSERT (list->data != NULL);
-    DEBUG_ASSERT (list->next != NULL);
-    DEBUG_ASSERT (list->prev != NULL);
-
-    list_data_t* data_arr = list->data;
-    int*         next_arr = list->next;
-    int*         prev_arr = list->prev; 
-
-    printf ("| data | next | prev |\n");
-
-    for (int i = 0; i < list->capacity; i++)
-        printf ("%2d|%6d|%6d|%6d|\n", i, data_arr[i], next_arr[i], prev_arr[i]);
-    printf ("|free = %d|\n|capacity = %d|\n|head = %d|\n|tail = %d|\n", list->free, list->capacity, list->head, list->tail);
 }
 
 //--------------------------------------------------------------------------------
