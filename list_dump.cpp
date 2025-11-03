@@ -20,7 +20,65 @@ list_err_t FillDotFile (list_t* list, const char* file_name)
         return   (LIST_OPEN_FILE_ERR);
     }
 
+    fprintf(dot_file, "digraph ListDump {\n");
+
+    fprintf(dot_file, "    rankdir=LR;\n"     );
+    fprintf(dot_file, "    node [shape=Mrecord, fontname=\"Courier\"];\n\n");
+
+    for (int i = 0; i < list->capacity; i++)
+    {
+        if (list->data[i] == POISON)
+        {
+            fprintf(dot_file, "    node%d [label=\"<idx> idx:%d | <data> data:PSN | <prev> prev:%d | <next> next:%d\", style=filled, color=yellow];\n", 
+                    i, i, list->prev[i], list->next[i]);
+        }
+        else
+        {
+            if (i == list->head)
+            {
+                fprintf(dot_file, "    node%d [label=\"<idx> idx:%d | <data> data:%d | <prev> prev:%d | <next> next:%d\", style=filled, color=magenta];\n", 
+                    i, i, list->data[i], list->prev[i], list->next[i]);
+                continue;
+            }
+            if (i == list->tail)
+            {
+                fprintf(dot_file, "    node%d [label=\"<idx> idx:%d | <data> data:%d | <prev> prev:%d | <next> next:%d\", style=filled, color=purple];\n", 
+                    i, i, list->data[i], list->prev[i], list->next[i]);
+                continue; 
+            }
+            fprintf(dot_file, "    node%d [label=\"<idx> idx:%d | <data> data:%d | <prev> prev:%d | <next> next:%d\", style=filled, color=aqua];\n", 
+                    i, i, list->data[i], list->prev[i], list->next[i]);
+        } 
+    }
+
+    fprintf (dot_file, "\n\tgraph [splines=ortho]\n\toverlap=false;\n\n");
+    //fprintf (dot_file, "dir=both");
+
+    for (int i = 0; i < list->capacity - 1; i++)
+    {
+        fprintf (dot_file, "    node%d -> node%d [style = invis, weight = 100];", i, i + 1);
+    }
+
+
+    for (int i = 0; i < list->capacity; i++)
+    {
+        
+        if (list->data[i] == POISON && i != 0)
+        {
+            fprintf(dot_file, "    node%d -> node%d [color=purple, constraint=false];\n", i, list->next[i]);
+        }
+        else
+        {
+            fprintf(dot_file, "    node%d -> node%d [color=blue, constraint=false];\n", i, list->next[i]);
+            fprintf(dot_file, "    node%d -> node%d [color=green, constraint=false];\n", i, list->prev[i]);
+        }
+    }
+    fprintf (stderr, "salam");
     
+        // fprintf (dot_file, "    inv_t0 -> inv_t7 [color=red];");
+        // fprintf (dot_file, "    node0:f0 -> inv_0 [color=red];");
+        // fprintf (dot_file, "    inv_t7 -> node7:f0 [color=red];");
+    fprintf(dot_file, "}\n");
 
     fclose(dot_file);
 

@@ -80,6 +80,7 @@ list_err_t IncreaseList (list_t* list)
         list->prev = prev_temp;
     }
 printf ("doshol do memset");
+    list->free = list->capacity;
     list->capacity = new_capacity;
 
     ListTerminalDump (list);
