@@ -55,31 +55,36 @@ list_err_t IncreaseList (list_t* list)
     DEBUG_ASSERT (list->next != NULL);
     DEBUG_ASSERT (list->prev != NULL);
 
+    fprintf (stderr, "before realloc\n");
+    ListTerminalDump (list);
+
     int new_capacity = list->capacity * 2;
 
-    list->data = (list_data_t*) realloc (list->data, new_capacity);
+    list_data_t* data_temp = NULL;
+    int*         next_temp = NULL;
+    int*         prev_temp = NULL;
 
-    if (list->data == NULL)
+    data_temp = (list_data_t*) realloc (list->data, new_capacity * sizeof (list_data_t));
+    next_temp = (int*)         realloc (list->next, new_capacity * sizeof (    int    ));
+    prev_temp = (int*)         realloc (list->prev, new_capacity * sizeof (    int    ));
+
+    if (data_temp == NULL || next_temp == NULL || prev_temp == NULL)
     {
         PRINTERR (LIST_ALLOCATE_ERR);
         return LIST_ALLOCATE_ERR;
     }
-
-    list->next = (int*) realloc (list->next, new_capacity);
-
-    if (list->next == NULL)
+    else
     {
-        PRINTERR (LIST_ALLOCATE_ERR);
-        return LIST_ALLOCATE_ERR;
+        list->data = data_temp;
+        list->next = next_temp;
+        list->prev = prev_temp;
     }
+printf ("doshol do memset");
+    list->capacity = new_capacity;
 
-    list->prev = (int*) realloc (list->prev, new_capacity);
+    ListTerminalDump (list);
 
-    if (list->prev == NULL)
-    {
-        PRINTERR (LIST_ALLOCATE_ERR);
-        return LIST_ALLOCATE_ERR;
-    }
+    MemSetList (list);
 
     return LIST_SUCCESS;
 }
@@ -106,24 +111,38 @@ void ListDestroy (list_t* list)
 
 void MemSetList (list_t* list)
 {
-    int* next_arr = list->next;
-    
-    next_arr[0] = 0;
+    int*         next_arr = list->next;
+    int*         prev_arr = list->prev;
+    list_data_t* data_arr = list->data;
 
-    for (int i = 1; i < list->capacity - 1; i++)
-        next_arr[i] = i + 1;
+    fprintf (stderr, "\n\nMemSet start\n");
+    ListTerminalDump (list);
+
+    int start_val = 0;
+
+    if (list->size == 0)
+        start_val = 0;
+    else
+        start_val = list->size + 1;
+
+        printf ("\n\n\n\nsize %d start_val %d\n\n\n\n", list->size, start_val);
+
+    for (int i = start_val; i < list->capacity; i++)
+    {
+        prev_arr[i]   = -1;
+        next_arr[i]   = i + 1;
+        data_arr[i]   = POISON;
+    }
+
+    if (list->size == 0) 
+    {
+        prev_arr[0] = 0;
+        next_arr[0] = 0;
+    }
 
     next_arr[list->capacity - 1] = 0;
-
-    int* prev_arr = list->prev;
-
-    prev_arr[0] = 0;
-    prev_arr[1] = 0;
-
-    for (int i = 2; i < list->capacity; i++)
-        prev_arr[i] = -1;
-    for (int i = 0; i < list->capacity; i++)
-        list->data[i] = POISON;
+    
+    ListTerminalDump (list);
 }
 
 //--------------------------------------------------------------------------------

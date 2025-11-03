@@ -46,17 +46,19 @@ struct list_t
 
 //————————————————————————————————————————————————————————————————————————————————
 
-list_err_t FillDotFile      (list_t* list, const char* file_name);
-list_err_t ListDump         (list_t* list, const char* file_name);
-list_err_t ListInsertAfter  (list_t* list, int idx, int val);
-list_err_t ListInsertBefore (list_t* list, int idx, int val);
-list_err_t ListInit         (list_t* list, int capacity);
-list_err_t ListDelete       (list_t* list, int idx);
-list_err_t ChangeFree       (list_t* list);
-list_err_t IncreaseList     (list_t* list);
-void       MemSetList       (list_t* list);
-void       ListDestroy      (list_t* list);
-void       ListTerminalDump (list_t* list);
+list_err_t FillDotFile       (list_t* list, const char* file_name);
+list_err_t ListDump          (list_t* list, const char* file_name);
+list_err_t ListInsertAfter   (list_t* list, int idx, int val);
+list_err_t ListInsertBefore  (list_t* list, int idx, int val);
+list_err_t ListInit          (list_t* list, int capacity);
+list_err_t ListDelete        (list_t* list, int idx);
+list_err_t ListInsertToStart (list_t* list, int val);
+list_err_t ListInsertToEnd   (list_t* list, int val);
+list_err_t ChangeFree        (list_t* list);
+list_err_t IncreaseList      (list_t* list);
+void       MemSetList        (list_t* list);
+void       ListDestroy       (list_t* list);
+void       ListTerminalDump  (list_t* list);
 
 //————————————————————————————————————————————————————————————————————————————————
 

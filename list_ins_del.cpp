@@ -28,17 +28,16 @@ list_err_t ListInsertAfter (list_t* list, int idx, int val)
 
     list->data[free] = val;
 
-    int next_el = list->next[idx];
+    list->prev[free] = idx;
+    list->prev[list->next[idx]] = free;
 
+    list->next[free] = list->next[idx];
     list->next[idx]  = free;
-    list->next[free] = next_el;
-    list->prev[free]    = idx;
-    list->prev[next_el] = free;
-
-    list->size++;
 
     list->head = list->next[0];
     list->tail = list->prev[0];
+
+    list->size++;
 
     return LIST_SUCCESS;
 }
@@ -71,41 +70,27 @@ list_err_t ListInsertBefore (list_t* list, int idx, int val)
 
     list->data[free] = val;
 
-    int next_el = list->next[idx];
-
     list->next[free] = idx;
     list->next[list->prev[idx]] = free;
     list->prev[free] = list->prev[idx];
     list->prev[idx] = free;
 
-    list->size++;
-
     list->head = list->next[0];
     list->tail = list->prev[0];
+
+    list->size++;
 
     return LIST_SUCCESS;
 }
 
 //--------------------------------------------------------------------------------
 
-list_err_t ListInsertToStart (list_t* list, int idx, int val)
+list_err_t ListInsertToStart (list_t* list, int val)
 {
     DEBUG_ASSERT (list       != NULL);
     DEBUG_ASSERT (list->data != NULL);
     DEBUG_ASSERT (list->next != NULL);
     DEBUG_ASSERT (list->prev != NULL);
-
-    if (idx < 0 || idx >= list->capacity)
-    {
-        PRINTERR (LIST_INVALID_IDX);
-        return LIST_INVALID_IDX;
-    }
-
-    if (list->data[idx] == POISON && idx != 0) // not empty cell
-    {
-        PRINTERR (LIST_INVALID_IDX);
-        return LIST_INVALID_IDX;
-    }
 
     int free = list->free;
 
@@ -114,17 +99,46 @@ list_err_t ListInsertToStart (list_t* list, int idx, int val)
 
     list->data[free] = val;
 
-    int next_el = list->next[idx];
-
     list->next[0] = free;
     list->next[free] = list->head;
+
     list->prev[free] = 0;
     list->prev[list->head] = free;
 
+    list->head = list->next[0];
+    list->tail = list->prev[0];
+
     list->size++;
+
+    return LIST_SUCCESS;
+}
+
+//--------------------------------------------------------------------------------
+
+list_err_t ListInsertToEnd (list_t* list, int val)
+{
+    DEBUG_ASSERT (list       != NULL);
+    DEBUG_ASSERT (list->data != NULL);
+    DEBUG_ASSERT (list->next != NULL);
+    DEBUG_ASSERT (list->prev != NULL);
+
+    int free = list->free;
+
+    if (ChangeFree (list))
+        return LIST_UP_SIZE_ERR;
+
+    list->data[free] = val;
+
+    list->next[list->tail] = free;
+    list->next[free] = 0;
+
+    list->prev[free] = list->tail;
+    list->prev[0] = free;
 
     list->head = list->next[0];
     list->tail = list->prev[0];
+
+    list->size++;
 
     return LIST_SUCCESS;
 }
@@ -161,6 +175,7 @@ list_err_t ListDelete (list_t* list, int idx)
     list->next[idx] = list->free;
     list->prev[idx] = -1;
     list->free = idx;
+    list->size--;
 
     return LIST_SUCCESS;
 }
