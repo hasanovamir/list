@@ -6,21 +6,31 @@ int main (void)
 {
     list_t list = {};
 
-    ListInit (&list, 4);
-
-    ListInsertAfter (&list, 0, 10);
-    ListDump (&list, "first");
-    ListTerminalDump (&list);
-    ListInsertAfter (&list, 0, 20);
-    ListDump (&list, "second");
-    ListInsertAfter (&list, 0, 30);
-    ListDump (&list, "third");
-    ListDelete (&list, 2);
-    ListInsertAfter (&list, 1, 74);
-    ListInsertAfter (&list, 3, 92);
-    ListDump (&list, "fourth");
-
-    ListTerminalDump (&list);
+    do
+    {
+        if (ListInit (&list, 4))
+            break;
+        if (ListInsertAfter (&list, 0, 10))
+            break;
+        if (ListDump (&list))
+            break;
+        if (ListInsertAfter (&list, 0, 20))
+            break;
+        if (ListDump (&list))
+            break;
+        if (ListInsertAfter (&list, 0, 30))
+            break;
+        if (ListDump (&list))
+            break;
+        if (ListDelete (&list, 2))
+            break;
+        if (ListInsertAfter (&list, 1, 74))
+            break;
+        if (ListInsertAfter (&list, 3, 92))
+            break;
+        if (ListDump (&list))
+            break;
+    } while (0);
 
     ListDestroy (&list);
 

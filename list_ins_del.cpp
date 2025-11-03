@@ -12,19 +12,21 @@ list_err_t ListInsertAfter (list_t* list, int idx, int val)
     if (idx < 0 || idx >= list->capacity)
     {
         PRINTERR (LIST_INVALID_IDX);
-        return LIST_INVALID_IDX;
+        return   (LIST_INVALID_IDX);
     }
 
     if (list->data[idx] == POISON && idx != 0)
     {
         PRINTERR (LIST_INVALID_IDX);
-        return LIST_INVALID_IDX;
+        return   (LIST_INVALID_IDX);
     }
 
     int free = list->free;
 
     if (ChangeFree (list))
+    {
         return LIST_UP_SIZE_ERR;
+    }
 
     list->data[free] = val;
 
@@ -54,24 +56,27 @@ list_err_t ListInsertBefore (list_t* list, int idx, int val)
     if (idx < 0 || idx >= list->capacity)
     {
         PRINTERR (LIST_INVALID_IDX);
-        return LIST_INVALID_IDX;
+        return   (LIST_INVALID_IDX);
     }
 
     if (list->data[idx] == POISON && idx != 0)
     {
         PRINTERR (LIST_INVALID_IDX);
-        return LIST_INVALID_IDX;
+        return   (LIST_INVALID_IDX);
     }
 
     int free = list->free;
 
     if (ChangeFree (list))
+    {
         return LIST_UP_SIZE_ERR;
+    }
 
     list->data[free] = val;
 
     list->next[free] = idx;
     list->next[list->prev[idx]] = free;
+
     list->prev[free] = list->prev[idx];
     list->prev[idx] = free;
 
@@ -95,7 +100,9 @@ list_err_t ListInsertToStart (list_t* list, int val)
     int free = list->free;
 
     if (ChangeFree (list))
+    {
         return LIST_UP_SIZE_ERR;
+    }
 
     list->data[free] = val;
 
@@ -125,7 +132,9 @@ list_err_t ListInsertToEnd (list_t* list, int val)
     int free = list->free;
 
     if (ChangeFree (list))
+    {
         return LIST_UP_SIZE_ERR;
+    }
 
     list->data[free] = val;
 
@@ -154,7 +163,9 @@ list_err_t ChangeFree (list_t* list)
     if (list->free == 0)
     {
         if (IncreaseList (list))
+        {
             return LIST_UP_SIZE_ERR;
+        }
     }
 
     return LIST_SUCCESS;
@@ -170,6 +181,7 @@ list_err_t ListDelete (list_t* list, int idx)
     DEBUG_ASSERT (list->prev != NULL);
 
     list->data[idx] = POISON;
+    
     list->next[list->prev[idx]] = list->next[idx];
     list->prev[list->next[idx]] = list->prev[idx];
     list->next[idx] = list->free;

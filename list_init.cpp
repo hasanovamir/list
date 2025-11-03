@@ -14,7 +14,7 @@ list_err_t ListInit (list_t* list, int capacity)
     if (capacity < 0)
     {
         PRINTERR (LIST_INVALID_CAPACITY_SIZE);
-        return LIST_INVALID_CAPACITY_SIZE;
+        return   (LIST_INVALID_CAPACITY_SIZE);
     }
 
     list->data = (list_data_t*) calloc (capacity, sizeof (list_data_t));
@@ -22,7 +22,7 @@ list_err_t ListInit (list_t* list, int capacity)
     if (list->data == NULL)
     {
         PRINTERR (LIST_ALLOCATE_ERR);
-        return LIST_ALLOCATE_ERR;
+        return   (LIST_ALLOCATE_ERR);
     }
 
     list->next = (int*) calloc (capacity, sizeof (int));
@@ -30,7 +30,7 @@ list_err_t ListInit (list_t* list, int capacity)
     if (list->next == NULL)
     {
         PRINTERR (LIST_ALLOCATE_ERR);
-        return LIST_ALLOCATE_ERR;
+        return   (LIST_ALLOCATE_ERR);
     }
 
     list->prev = (int*) calloc (capacity, sizeof (int));
@@ -38,7 +38,7 @@ list_err_t ListInit (list_t* list, int capacity)
     if (list->prev == NULL)
     {
         PRINTERR (LIST_ALLOCATE_ERR);
-        return LIST_ALLOCATE_ERR;
+        return   (LIST_ALLOCATE_ERR);
     }
 
     MemSetList (list);
@@ -55,9 +55,6 @@ list_err_t IncreaseList (list_t* list)
     DEBUG_ASSERT (list->next != NULL);
     DEBUG_ASSERT (list->prev != NULL);
 
-    fprintf (stderr, "before realloc\n");
-    ListTerminalDump (list);
-
     int new_capacity = list->capacity * 2;
 
     list_data_t* data_temp = NULL;
@@ -71,7 +68,7 @@ list_err_t IncreaseList (list_t* list)
     if (data_temp == NULL || next_temp == NULL || prev_temp == NULL)
     {
         PRINTERR (LIST_ALLOCATE_ERR);
-        return LIST_ALLOCATE_ERR;
+        return   (LIST_ALLOCATE_ERR);
     }
     else
     {
@@ -79,11 +76,9 @@ list_err_t IncreaseList (list_t* list)
         list->next = next_temp;
         list->prev = prev_temp;
     }
-printf ("doshol do memset");
+
     list->free = list->capacity;
     list->capacity = new_capacity;
-
-    ListTerminalDump (list);
 
     MemSetList (list);
 
@@ -116,17 +111,12 @@ void MemSetList (list_t* list)
     int*         prev_arr = list->prev;
     list_data_t* data_arr = list->data;
 
-    fprintf (stderr, "\n\nMemSet start\n");
-    ListTerminalDump (list);
-
     int start_val = 0;
 
     if (list->size == 0)
         start_val = 0;
     else
         start_val = list->size + 1;
-
-        printf ("\n\n\n\nsize %d start_val %d\n\n\n\n", list->size, start_val);
 
     for (int i = start_val; i < list->capacity; i++)
     {
@@ -142,8 +132,6 @@ void MemSetList (list_t* list)
     }
 
     next_arr[list->capacity - 1] = 0;
-    
-    ListTerminalDump (list);
 }
 
 //--------------------------------------------------------------------------------
