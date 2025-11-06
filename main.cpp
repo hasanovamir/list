@@ -2,6 +2,22 @@
 
 //--------------------------------------------------------------------------------
 
+// TEST_?()
+// {
+//     ListInsert*()
+//     ListDump()
+//     ListVerify*()
+
+//     bool res = Check()
+
+//     ASSERT(res == true)
+// }
+
+// int main()
+// {
+//     return ::gtest::RunAllTests();
+// }
+
 int main (void)
 {
     list_t list = {};
@@ -32,6 +48,7 @@ int main (void)
             break;
     } while (0);
 
+    ListDump    (&list);
     ListDestroy (&list);
 
     return EXIT_SUCCESS;

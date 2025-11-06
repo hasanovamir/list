@@ -43,6 +43,8 @@ list_err_t ListInit (list_t* list, int capacity)
 
     MemSetList (list);
 
+    ListStartFillHtml ();
+
     return LIST_SUCCESS;
 }
 
@@ -50,10 +52,7 @@ list_err_t ListInit (list_t* list, int capacity)
 
 list_err_t IncreaseList (list_t* list)
 {
-    DEBUG_ASSERT (list       != NULL);
-    DEBUG_ASSERT (list->data != NULL);
-    DEBUG_ASSERT (list->next != NULL);
-    DEBUG_ASSERT (list->prev != NULL);
+    LIST_VERIFY (list);
 
     int new_capacity = list->capacity * 2;
 
@@ -87,12 +86,9 @@ list_err_t IncreaseList (list_t* list)
 
 //--------------------------------------------------------------------------------
 
-void ListDestroy (list_t* list)
+list_err_t ListDestroy (list_t* list)
 {
-    DEBUG_ASSERT (list       != NULL);
-    DEBUG_ASSERT (list->data != NULL);
-    DEBUG_ASSERT (list->next != NULL);
-    DEBUG_ASSERT (list->prev != NULL);
+    LIST_VERIFY (list);
 
     free (list->data);
     free (list->next);
@@ -101,12 +97,21 @@ void ListDestroy (list_t* list)
     list->data = NULL;
     list->next = NULL;
     list->prev = NULL;
+
+    ListEndFillHtml ();
+
+    return LIST_SUCCESS;
 }
 
 //--------------------------------------------------------------------------------
 
 void MemSetList (list_t* list)
 {
+    DEBUG_ASSERT (list != NULL);
+    DEBUG_ASSERT (list->data != NULL);
+    DEBUG_ASSERT (list->next != NULL);
+    DEBUG_ASSERT (list->prev != NULL);
+
     int*         next_arr = list->next;
     int*         prev_arr = list->prev;
     list_data_t* data_arr = list->data;
