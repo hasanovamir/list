@@ -25,7 +25,7 @@ TEST(List, Init)
     EXPECT_EQ (list.next[0],   0);
     EXPECT_EQ (list.next[19],  0);
     EXPECT_EQ (list.prev[19], -1);
-    EXPECT_EQ (list.prev[0],  0);
+    EXPECT_EQ (list.prev[0],   0);
 }
 
 //--------------------------------------------------------------------------------

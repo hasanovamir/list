@@ -18,6 +18,12 @@ typedef int list_data_t;
 
 //————————————————————————————————————————————————————————————————————————————————
 
+const int MAXSTRINGSIZE      = 256;
+const int MAXCOMMANDSIZE     = 128;
+const int MAXFILENAMESIZE    = 32;
+
+//————————————————————————————————————————————————————————————————————————————————
+
 typedef enum
 { 
     LIST_SUCCESS,

@@ -2,22 +2,6 @@
 
 //--------------------------------------------------------------------------------
 
-// TEST_?()
-// {
-//     ListInsert*()
-//     ListDump()
-//     ListVerify*()
-
-//     bool res = Check()
-
-//     ASSERT(res == true)
-// }
-
-// int main()
-// {
-//     return ::gtest::RunAllTests();
-// }
-
 int main (void)
 {
     list_t list = {};

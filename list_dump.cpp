@@ -59,7 +59,18 @@ void MakeDumpTitle (FILE* dot_file)
 {
     DEBUG_ASSERT (dot_file != NULL);
 
-    fprintf(dot_file, "digraph ListDump {\n\trankdir=LR;\n\tnode [shape=Mrecord, fontname=\"Courier\"];\n\n\n\tgraph [splines=ortho]\n\toverlap=false;\n\n");
+    char title[] = 
+
+R"(digraph ListDump {
+    rankdir=LR;
+    node [shape=Mrecord, fontname="Courier"];
+
+    graph [splines=ortho]
+    overlap=false;
+    
+)";
+
+    fprintf(dot_file, title);
 }
 
 //--------------------------------------------------------------------------------
@@ -96,12 +107,12 @@ list_err_t ListDump (list_t* list)
 {
     list->num_calls++;
 
-    char dot_file_name[20];
-    char png_file_name[20];
-    char command[50];
+    char dot_file_name[MAXFILENAMESIZE];
+    char png_file_name[MAXFILENAMESIZE];
+    char command[MAXCOMMANDSIZE];
     
-    snprintf(dot_file_name, sizeof(dot_file_name), "dot/%s_%d.dot", "call", list->num_calls);
-    snprintf(png_file_name, sizeof(png_file_name), "png/%s_%d.svg", "call", list->num_calls);
+    snprintf(dot_file_name, MAXFILENAMESIZE, "dot/%s_%d.dot", "call", list->num_calls);
+    snprintf(png_file_name, MAXFILENAMESIZE, "png/%s_%d.svg", "call", list->num_calls);
     
     if (FillDotFile (list, dot_file_name))
     {
@@ -110,7 +121,7 @@ list_err_t ListDump (list_t* list)
 
     printf("Generated DOT file:  %s\n", dot_file_name);
     
-    snprintf(command, sizeof(command), "dot -Tsvg %s -o %s", dot_file_name, png_file_name);
+    snprintf(command, MAXCOMMANDSIZE, "dot -Tsvg %s -o %s", dot_file_name, png_file_name);
 
     int result = system(command);
     
@@ -161,9 +172,9 @@ list_err_t ListFillHtml (list_t* list, const char* file_name)
         return   (LIST_OPEN_FILE_ERR);
     }
 
-    char string[500] = "";
+    char string[MAXSTRINGSIZE] = "";
 
-    snprintf (string, 500, "\t<h2>CALL = #%d</h2>\n\t<p>HEAD = %d</p>\n\t<p>TAIL = %d</p>\n\t<p>FREE = %d</p>\n\t<p>CAPACITY = %d</p>\n\t<img src=\"%s\">\n\n", 
+    snprintf (string, MAXSTRINGSIZE, "\t<h2>CALL = #%d</h2>\n\t<p>HEAD = %d</p>\n\t<p>TAIL = %d</p>\n\t<p>FREE = %d</p>\n\t<p>CAPACITY = %d</p>\n\t<img src=\"%s\">\n\n", 
         list->num_calls, list->head, list->tail, list->free, list->capacity, file_name);
 
     fprintf (html_file, string);
